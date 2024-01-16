@@ -10,17 +10,17 @@ path = ".\\image\\" # 저장 경로
 driver = webdriver.Chrome()
 search = input("이미지 검색: ")
 
-driver.get('https://www.naver.com/')
-time.sleep(1)
-driver.find_element(By.XPATH, '//*[@id="query"]').send_keys(search) #검색어 입력
-driver.find_element(By.XPATH, '//*[@id="query"]').send_keys(Keys.ENTER)
+driver.get('https://search.naver.com/search.naver?where=image&sm=tab_jum&query='+search)
 time.sleep(1)
 driver.find_element(By.XPATH, '//*[@id="lnb"]/div[1]/div/div[1]/div/div[1]/div[2]/a').click() # 이미지 선택
 time.sleep(1)
 imagediv = driver.find_elements(By.CLASS_NAME, '_fe_image_tab_content_thumbnail_image')
 for i, j in enumerate(imagediv):
     src_url = j.get_attribute('src') #img src 주소값을 변수에 저장
-    request.urlretrieve(src_url, f"{path}{search}_{i}.jpg")
+    if('data' not in src_url):
+        request.urlretrieve(src_url, f"{path}{search}_{i}.jpg")
+    # print(src_url)
+    
 
 
 

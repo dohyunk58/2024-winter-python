@@ -16,5 +16,6 @@ driver.switch_to.frame(iframe)
 img = driver.find_elements(By.TAG_NAME, 'img')
 for i, j in enumerate(img):
     src_url = j.get_attribute("src")
-    request.urlretrieve(src_url, f"{path}_{i}.jpg")
+    if('data' not in src_url):
+        request.urlretrieve(src_url, f"{path}_{i}.jpg")
     

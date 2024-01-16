@@ -1,3 +1,4 @@
+# 탭 최대화, 탭 이동
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
