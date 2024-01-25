@@ -1,0 +1,52 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+from openpyxl import Workbook as wb
+
+# 검색 주소: https://www.daangn.com/search/
+
+options = webdriver.ChromeOptions()
+# options.add_argument("headless")
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+options.add_argument('user-agent=' + user_agent)
+driver = webdriver.Chrome(options=options)
+search = input("키워드 검색: ")
+
+# 키워드 검색
+driver.get('https://www.daangn.com/search/'+search)
+driver.implicitly_wait(10) # 암묵적 대기: 최대 10초 동안 암묵적 대기
+
+# //*[@id="flea-market-wrap"]/article[1]/a/div[2]
+
+# div = driver.find_elements(By.CLASS_NAME, 'article-title-content')
+title = driver.find_elements(By.CLASS_NAME, 'article-title-content') # 제목
+location = driver.find_elements(By.CLASS_NAME, 'article-region-name') # 위치
+price = driver.find_elements(By.CLASS_NAME, 'article-price') # 가격
+# description = driver.find_elements(By.CLASS_NAME, 'article-content') # 상세설명
+
+box = [] # [제목, 지역, 가격] 이중리스트
+
+for i in title:
+    box.append([i.text])
+    
+for i in range(len(box)):
+    loc_text = location[i].text # 위치
+    box[i].append(loc_text)
+
+    price_text = price[i].text # 가격
+    box[i].append(price_text)
+
+print(box)
+
+excel = wb() # 엑셀파일 생성
+sheet = excel.create_chartsheet(search) # 시트 생성
+sheet = excel.active
+sheet.append(['검색어', search])
+sheet.append(['번호','제목','가격','위치'])
+for i in range(len(box)):
+    sheet.append([i, box[i][0], box[i][1], box[i][2]])
+excel.save(f"./{search}_list.xlsx")
+
+time.sleep(30)
