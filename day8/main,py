@@ -48,5 +48,3 @@ sheet.append(['번호','제목','가격','위치'])
 for i in range(len(box)):
     sheet.append([i, box[i][0], box[i][1], box[i][2]])
 excel.save(f"./{search}_list.xlsx")
-
-time.sleep(30)
